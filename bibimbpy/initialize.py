@@ -72,3 +72,30 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     vz0 = final_vars["vz"]
 
     return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),var1,var2
+
+
+def generate_TimeDepPot(interpol="false"):
+    """
+    interpol = true or false
+    """
+
+    #Generate individual files for each step of the perturbation
+    for i,m in enumerate(bar_mass):
+        t = bar_time[i]
+        with open("Potentitals/Ferrer_bar/Ferrer_srad5_qy0.15_qz0.035_{}.ini".format(str(m)+"_"+str(t)),"w") as f:
+            f.write("[Potential bar]\n")
+            f.write(f"type=Ferrers\nmass={m}\nscaleRadius={scaleRadius}\naxisRatioY={axisRatioY}\naxisRatioZ={axisRatioZ}")
+
+    #make sure that the files are sorted by time
+    bar_files = [f_ for f_ in os.listdir("Potentitals/Ferrer_bar/") if f_.endswith(".ini") and f_.startswith("Ferrer_srad")]
+    t_snapshot = np.array([float(aux.split("_")[-1][:-4]) for aux in bar_files])
+    t_snapshot_sorted = np.sort(t_snapshot)
+    bar_files_sorted = [x for _, x in sorted(zip(t_snapshot, bar_files))]
+
+    #generate one file for the final Time Dependent potential
+    with open(filename_TimeDepPot,"w") as f:
+        f.write(f"\n[Potential perturber]\ntype=Evolving\ninterpLinear={interpol}\nTimestamps\n")
+        for i,filename in enumerate(bar_files_sorted):
+            f.write(f"{str(t_snapshot_sorted[i])} {filename}\n")
+
+    return filename_TimeDepPot
