@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import utils
 
 def set_initial_conditions(r,phi,z,vr,vphi,vz):
     """
@@ -83,13 +84,7 @@ def generate_TimeDepPot(folder_name,file_name,generating_function,times,interpol
     #Generate individual files for each step of the perturbation
     for i,t in times:
         pot_params_dict = generating_function(t)
-        pot_str = ""
-        for key,param in pot_params_dict.items():
-            pot_str += key + " = " + param + "\n"
-
-        with (folder_name+file_name+f"_t{t}.ini","w") as f:
-            f.write("[Potential bar]\n")
-            f.write(pot_str)
+        utils.write_potential(pot_params_dict,folder_name+file_name+f"_t{t}.ini")
 
     #make sure that the files are sorted by time
     bar_files = [f_ for f_ in os.listdir(folder_name) if f_.endswith(".ini")]

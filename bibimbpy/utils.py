@@ -63,3 +63,14 @@ def DFhistogram2d(x,y,df_eval,bins):
     df_sum,_,_,_ = scipy.stats.binned_statistic_2d(x,y,df_eval,statistic="sum",bins=bins)
 
     return df_sum
+
+def write_potential(pot_params_dict,name):
+    pot_str = ""
+    for key,param in pot_params_dict.items():
+        pot_str += key + " = " + param + "\n"
+
+    with (name,"w") as f:
+        f.write("[Potential]\n")
+        f.write(pot_str)
+    
+    return None
