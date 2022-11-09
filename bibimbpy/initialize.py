@@ -26,56 +26,70 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     iter_vars = {}
     final_vars = {}
 
+    #store lengths
+    lenghts = []
+
     #TO-DO: check a better way to do this check
     if isinstance(r,list) or isinstance(r,tuple) or isinstance(r,np.ndarray):
         iter_vars["r"] = r
+        lenghts.append(len(r))
     else:
         final_vars["r"] = r
 
     if isinstance(phi,list) or isinstance(phi,tuple) or isinstance(phi,np.ndarray):
         iter_vars["phi"] = phi
+        lenghts.append(len(phi))
     else:
         final_vars["phi"] = phi
 
     if isinstance(z,list) or isinstance(z,tuple) or isinstance(z,np.ndarray):
         iter_vars["z"] = z
+        lenghts.append(len(z))
     else:
         final_vars["z"] = z
 
     if isinstance(vr,list) or isinstance(vr,tuple) or isinstance(vr,np.ndarray):
         iter_vars["vr"] = vr
+        lenghts.append(len(vr))
     else:
         final_vars["vr"] = vr
 
     if isinstance(vphi,list) or isinstance(vphi,tuple) or isinstance(vphi,np.ndarray):
         iter_vars["vphi"] = vphi
+        lenghts.append(len(vphi))
     else:
         final_vars["vphi"] = vphi
 
     if isinstance(vz,list) or isinstance(vz,tuple) or isinstance(vz,np.ndarray):
         iter_vars["vz"] = vz
+        lenghts.append(len(vz))
     else:
         final_vars["vz"] = vz
 
+    #check that all lengths are equal
+    ##TO-DO check that all values are the same
+
     #Cross variables with a meshgrid (accounting for all the cases)
     if len(iter_vars.keys())==2:
+        key1,key2 = list(iter_vars.keys())
         aux1,aux2 = list(iter_vars.values())
         var1,var2 = np.meshgrid(aux1, aux2, indexing="ij")
-        final_vars[vars.key[0]] = var1.flatten()
-        final_vars[vars.key[1]] = var2.flatten()
+        final_vars[key1] = var1.flatten()
+        final_vars[key2] = var2.flatten()
+        len_ = len(final_vars[key1])
     else:
         #TO-DO: allow for more variable to iterate through
         raise ValueError("Sorry! More than two variables is not implemented yet!")
 
     #Generate initial conditions
-    x0 = final_vars["r"]*np.cos(final_vars["phi"])
-    y0 = final_vars["r"]*np.sin(final_vars["phi"])
-    z0 = final_vars["z"]
-    vx0 = final_vars["vr"]*np.cos(final_vars["phi"])-final_vars["vphi"]*np.sin(final_vars["phi"])
-    vy0 = final_vars["vr"]*np.sin(final_vars["phi"])+final_vars["vphi"]*np.cos(final_vars["phi"])
-    vz0 = final_vars["vz"]
+    x0  = final_vars["r"]*np.cos(final_vars["phi"])*np.ones(len_)
+    y0  = final_vars["r"]*np.sin(final_vars["phi"])*np.ones(len_)
+    z0  = final_vars["z"]*np.ones(len_)
+    vx0 = (final_vars["vr"]*np.cos(final_vars["phi"])-final_vars["vphi"]*np.sin(final_vars["phi"]))*np.ones(len_)
+    vy0 = (final_vars["vr"]*np.sin(final_vars["phi"])+final_vars["vphi"]*np.cos(final_vars["phi"]))*np.ones(len_)
+    vz0 = final_vars["vz"]*np.ones(len_)
 
-    return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),var1,var2
+    return np.column_stack((x0,y0,z0,vx0,vy0,vz0))
 
 
 def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,interpol="false"):
