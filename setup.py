@@ -38,7 +38,7 @@ setup(
                      + history,
     long_description_content_type="text/markdown",
 
-    url=https://github.com/brugalada/BIBIMBpy,
+    url="https://github.com/brugalada/BIBIMBpy",
 
     author='Pau Ramos',
     author_email='pramos@fqa.ub.edu',
@@ -49,7 +49,7 @@ setup(
     packages=find_packages(exclude=['examples']),
     package_data={'': ['LICENSE', 'HISTORY.md', 'INSTALL.md']},
     include_package_data=True,
-    install_requires=['numpy', 'scipy', 'matplotlib', 'agama'],
+    #install_requires=['numpy', 'scipy', 'matplotlib', 'agama'],
 
     classifiers=[
         'Development Status :: 4 - Beta',
