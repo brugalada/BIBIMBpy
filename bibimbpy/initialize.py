@@ -27,39 +27,40 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     final_vars = {}
 
     #TO-DO: check a better way to do this check
-    if r is isinstance((list,tuple,np.ndarray)):
+    if isinstance(r,list) or isinstance(r,tuple) or isinstance(r,np.ndarray):
         iter_vars["r"] = r
     else:
         final_vars["r"] = r
 
-    if phi is isinstance((list,tuple,np.ndarray)):
+    if isinstance(phi,list) or isinstance(phi,tuple) or isinstance(phi,np.ndarray):
         iter_vars["phi"] = phi
     else:
         final_vars["phi"] = phi
 
-    if z is isinstance((list,tuple,np.ndarray)):
+    if isinstance(z,list) or isinstance(z,tuple) or isinstance(z,np.ndarray):
         iter_vars["z"] = z
     else:
         final_vars["z"] = z
 
-    if vr is isinstance((list,tuple,np.ndarray)):
+    if isinstance(vr,list) or isinstance(vr,tuple) or isinstance(vr,np.ndarray):
         iter_vars["vr"] = vr
     else:
         final_vars["vr"] = vr
 
-    if vphi is isinstance((list,tuple,np.ndarray)):
+    if isinstance(vphi,list) or isinstance(vphi,tuple) or isinstance(vphi,np.ndarray):
         iter_vars["vphi"] = vphi
     else:
         final_vars["vphi"] = vphi
 
-    if vz is isinstance((list,tuple,np.ndarray)):
+    if isinstance(vz,list) or isinstance(vz,tuple) or isinstance(vz,np.ndarray):
         iter_vars["vz"] = vz
     else:
         final_vars["vz"] = vz
 
     #Cross variables with a meshgrid (accounting for all the cases)
-    if len(iter_vars.keys)==2:
-        var1,var2 = np.meshgrid(iter_vars.items[0],iter_vars.items[1],indexing="ij")
+    if len(iter_vars.keys())==2:
+        aux1,aux2 = list(iter_vars.values())
+        var1,var2 = np.meshgrid(aux1, aux2, indexing="ij")
         final_vars[vars.key[0]] = var1.flatten()
         final_vars[vars.key[1]] = var2.flatten()
     else:
