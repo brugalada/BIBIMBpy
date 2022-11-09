@@ -24,7 +24,7 @@ def runBI(particle_ini,pot_timedep,pot_base,df,dyn_time_base,number_of_cycles,pa
     Inputs:
     - particle_ini: Initial conditions, Nx6 array of positions and velocites at t=tfin.
     - pot_timedep: AGAMA potential instance use for the backwards integration
-    - pot_base: AGAMA potential instance. The potential at t<=0, before the perturbation.
+    - pot_base: AGAMA potential instance. The potential at t<=0, before the perturbation. Must account for the mass that will later be put in the perturbation (unless adding mass to the system is the desired outcome).
     - df: Distribution Function of the particles in pot_base at t<=0, before the perturbation.
     - dyn_time_base: Dynamical timescale. It is meant to be used as the period of the pattern speed, i.e. 2pi/pattern_speed [in units of s*kpc/km]
     - number_of_cycles: Number of dynamical timescales to integrate.
