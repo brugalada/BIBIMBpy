@@ -65,12 +65,54 @@ def DFhistogram2d(x,y,df_eval,bins):
     return df_sum
 
 def write_potential(pot_params_dict,name):
-    pot_str = ""
-    for key,param in pot_params_dict.items():
-        pot_str += key + " = " + param + "\n"
+
+    pot_str = extract_params(pot_params_dict)
 
     with (name,"w") as f:
         f.write("[Potential]\n")
         f.write(pot_str)
     
     return None
+
+def extract_params(pot_params_dict):
+    pot_str = ""
+    for key,param in pot_params_dict.items():
+        pot_str += key + " = " + param + "\n"
+    return pot_str
+
+
+def invert_scaling_file(file):
+    """
+    This function takes a file with the right format (see below) and inverts the second and third column. In other words, the time evolution of the scaling factors is reversed.
+
+    The expected format of the file is the following:
+    #Time Mass_scale Radius_scale
+    0 0 1
+    0.1 0.5 1
+    0.2 1 1
+
+    NOTES: time must be order in increasing order and the separation between values is done with blank spaces.
+    """
+    time, mass, radius = [],[],[]
+    file_split = file.split("/")
+    directories = ""
+    for f in file_split[:-1]: 
+        directories += f + "/"
+    filename = file_split[-1]
+    print(directories+"reversed_"+filename)
+    with open(directories+"reversed_"+filename,"w") as r:
+        with open(file,"r") as f:
+            for line in f.readlines():
+                if line.startswith("#"):
+                    r.write(line)
+                else:
+                    line_split = line.split()
+                    time.append(line_split[0])
+                    mass.append(line_split[1])
+                    radius.append(line_split[2])
+            for i,t in enumerate(time):
+                new_line = t + " " + mass[-i-1] + " " + radius[-i-1] + "\n"
+                r.write(new_line)
+
+    return directories+"reversed_"+filename
+

@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import utils
+from orbits import agama
 
 def set_initial_conditions(r,phi,z,vr,vphi,vz):
     """
@@ -76,7 +77,7 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),var1,var2
 
 
-def generate_TimeDepPot(folder_name,file_name,generating_function,times,interpol="false"):
+def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,interpol="false"):
     """
     interpol = true or false
     """
@@ -99,3 +100,29 @@ def generate_TimeDepPot(folder_name,file_name,generating_function,times,interpol
             f.write(f"{str(t_snapshot_sorted[i])} {filename}\n")
 
     return folder_name+file_name+".ini"
+
+
+def generate_TimeDepPot(scaling_file,rmin,rmax,**pot_kwargs):
+    """
+    Generates a potential of a growing perturbation. Starts as a m=0 mode (only mass) and evolves into the final perturbation.
+    The perturbation is any arbitrary AGAMA potential and is initialised as one would with AGAMA.
+    The other required parameters is a file describing the time evolution of the perturbation and rmin, rmax used for the m=0 expantion.
+
+    Input:
+    - scaling_file: The expected format of the file is the following:
+    #Time Mass_scale Radius_scale
+    0 0 1
+    0.1 0.5 1
+    0.2 1 1
+    NOTES: time must be order in increasing order and the separation between values is done with blank spaces.
+
+    - rmin: the radius of the innermost nonzero node in the radial grid (for both potential
+expansions); zero means automatic determination.
+    - rmax: same for the outermost node; zero values mean automatic determination.
+    - pot_kwargs: the parameters passed to AGAMA to generate the desired perturbation
+    """
+    
+    pot_pertuber = agama.Potential(**pot_kwargs, scale=scaling_file)
+    pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber, mmax=0, rmin=rmin, rmax=rmax, scale=utils.invert_scaling_file(scaling_file))
+
+    return agama.Potential(pot_pertuber,pot_pertuber_m0)
