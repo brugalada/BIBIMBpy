@@ -45,7 +45,7 @@ setup(
 
     license='LGPLv2.1',
 
-    # packages=['orbits', 'initialize', 'utils'],
+    #packages=['orbits', 'initialize', 'utils'],
     packages=find_packages(exclude=['examples']),
     package_data={'': ['LICENSE', 'HISTORY.md', 'INSTALL.md']},
     include_package_data=True,

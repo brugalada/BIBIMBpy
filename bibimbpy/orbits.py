@@ -1,6 +1,6 @@
 import numpy as np
 import agama
-from utils import bar2inertial_frame
+from .utils import bar2inertial_frame
 
 def integrate_backwards(particle_ini,pot,number_of_cycles,dyn_time_base,pattern_speed,_trajsize = 2):
     """ 

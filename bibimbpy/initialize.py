@@ -1,7 +1,7 @@
 import numpy as np
 import os
-import utils
-from orbits import agama
+import agama
+from .utils import write_potential, invert_scaling_file
 
 def set_initial_conditions(r,phi,z,vr,vphi,vz):
     """
@@ -85,7 +85,7 @@ def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,inte
     #Generate individual files for each step of the perturbation
     for i,t in times:
         pot_params_dict = generating_function(t)
-        utils.write_potential(pot_params_dict,folder_name+file_name+f"_t{t}.ini")
+        write_potential(pot_params_dict,folder_name+file_name+f"_t{t}.ini")
 
     #make sure that the files are sorted by time
     bar_files = [f_ for f_ in os.listdir(folder_name) if f_.endswith(".ini")]
@@ -121,8 +121,8 @@ expansions); zero means automatic determination.
     - rmax: same for the outermost node; zero values mean automatic determination.
     - pot_kwargs: the parameters passed to AGAMA to generate the desired perturbation
     """
-    
+
     pot_pertuber = agama.Potential(**pot_kwargs, scale=scaling_file)
-    pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber, mmax=0, rmin=rmin, rmax=rmax, scale=utils.invert_scaling_file(scaling_file))
+    pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber, mmax=0, rmin=rmin, rmax=rmax, scale=invert_scaling_file(scaling_file))
 
     return agama.Potential(pot_pertuber,pot_pertuber_m0)

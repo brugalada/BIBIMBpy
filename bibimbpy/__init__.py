@@ -28,4 +28,6 @@ try:
 except ImportError:
     raise ImportError('MatPlotLib does not seem to be installed.')
 
-__modules__ = ['orbits','initialize','utils']
+from . import orbits
+from . import initialize
+from . import utils
