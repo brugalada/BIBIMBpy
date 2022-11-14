@@ -113,6 +113,7 @@ def invert_scaling_file(file):
             for i,t in enumerate(time):
                 new_line = t + " " + mass[-i-1] + " " + radius[-i-1] + "\n"
                 r.write(new_line)
+            r.write(str(float(t)+10) + " " + mass[-i-1] + " " + radius[-i-1] + "\n")
 
     return directories+"reversed_"+filename
 
