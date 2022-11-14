@@ -144,8 +144,8 @@ expansions); zero means automatic determination.
     scaling_file = pot_kwargs["scale"]
 
     #make the static part
-    pot_kwargs_static = pot_kwargs.pop("scale")
-    pot_pertuber_static = agama.Potential(**pot_kwargs_static)
+    pot_kwargs.pop("scale")
+    pot_pertuber_static = agama.Potential(**pot_kwargs)
     pot_pertuber_m0_static = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=rmin, rmax=rmax)
     pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=rmin, rmax=rmax, 
                                         scale=invert_scaling_file(scaling_file))
@@ -160,6 +160,6 @@ def generate_Pot(base_pot_dict,perturb_pot_dict,_rmin=0,_rmax=20):
     #generate base potential
     pbase = agama.Potential(**base_pot_dict)
 
-    return perturb,agama.Potential(pbase,m0_mode_stat)
+    return agama.Potential(pbase,m0_mode_stat),perturb
 
     
