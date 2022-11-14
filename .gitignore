@@ -153,3 +153,4 @@ cython_debug/
 tests/reversed_test_scaling_file.txt
 tests/test_scaling_file.txt
 tests/dehnen00_scaling.txt
+tests/reversed_dehnen00_scaling.txt

@@ -158,3 +158,13 @@ def generate_scaling_file(tf,mode,nodes,filename,_amp=1):
     return None
 
 
+def default_df_gen_func(points,pot_base,df):
+    #action-angle
+    af = agama.ActionFinder(pot_base)
+
+    #compute actions at t=0
+    actions = af(points)
+
+    return df(actions)
+
+
