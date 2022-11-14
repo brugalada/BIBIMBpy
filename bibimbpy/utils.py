@@ -60,9 +60,9 @@ def DFhistogram2d(x,y,df_eval,bins):
     - df_sum: Sum of distribution function in each bin.
     """
     
-    df_sum,_,_,_ = scipy.stats.binned_statistic_2d(x,y,df_eval,statistic="sum",bins=bins)
+    df_sum,xe,ye,_ = scipy.stats.binned_statistic_2d(x,y,df_eval,statistic="sum",bins=bins)
 
-    return df_sum
+    return df_sum,xe,ye
 
 def write_potential(pot_params_dict,name):
 

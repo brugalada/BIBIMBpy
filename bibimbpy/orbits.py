@@ -28,7 +28,7 @@ def runBI(particle_ini,pot_timedep,pot_base,df,dyn_time_base,number_of_cycles,pa
     - df: Distribution Function of the particles in pot_base at t<=0, before the perturbation.
     - dyn_time_base: Dynamical timescale. It is meant to be used as the period of the pattern speed, i.e. 2pi/pattern_speed [in units of s*kpc/km]
     - number_of_cycles: Number of dynamical timescales to integrate.
-    - pattern_speed: pattern speed of the rotating frame, negative for a prograre rotation [in units of km/s/kpc]
+    - pattern_speed: pattern speed of the rotating frame, positive for a prograre rotation [in units of km/s/kpc]
 
     Outputs:
     - df_eval: value of the Distribution Function for each particle in particle_ini

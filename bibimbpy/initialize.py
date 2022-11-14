@@ -14,7 +14,7 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     - phi: Galactocentric azimuth (in degrees)
     - z: Verticle height
     - vr: Galactocentric radial velocity (positive: outwards, negative: inwards)
-    - vphi: Galactocentric azimuthal velocity (negative: prograde, positive: retrograde)
+    - vphi: Galactocentric azimuthal velocity (negative: retrograde, positive: prograde)
     - vz: Verticle velocity
 
     Output:
@@ -89,7 +89,7 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     vy0 = (final_vars["vr"]*np.sin(final_vars["phi"])+final_vars["vphi"]*np.cos(final_vars["phi"]))*np.ones(len_)
     vz0 = final_vars["vz"]*np.ones(len_)
 
-    return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),var1,var2
+    return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),final_vars[key1],final_vars[key2]
 
 
 def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,interpol="false"):
