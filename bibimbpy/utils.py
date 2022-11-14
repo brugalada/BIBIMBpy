@@ -99,10 +99,10 @@ def invert_scaling_file(file):
     for f in file_split[:-1]: 
         directories += f + "/"
     filename = file_split[-1]
-    print(directories+"reversed_"+filename)
+    #print(directories+"reversed_"+filename)
     with open(directories+"reversed_"+filename,"w") as r:
         with open(file,"r") as f:
-            for line in f.readlines():
+            for i,line in enumerate(f.readlines()):
                 if line.startswith("#"):
                     r.write(line)
                 else:
@@ -115,4 +115,45 @@ def invert_scaling_file(file):
                 r.write(new_line)
 
     return directories+"reversed_"+filename
+
+def generate_scaling_file(tf,mode,nodes,filename,_amp=1):
+    """
+    Generate a file containing the values of the scaling factor as a function of time.
+
+    Input:
+    - tf: final time. Can be positive or negative. Regardeless, the file will always be ordered in increasing time.
+    - mode: Choose between "linear", "exponential" or "dehnen"
+    - nodes: number of points or nodes between 0 and tf
+    - filename: full address of the file in which to store the results
+    - _amp: final value of the scaling factor (initial value will always be 0) 
+    """
+
+    def dehnen(t,tf):
+        def aux_func(t,tf):
+            return 2*t/tf-1
+        aux = aux_func(t,tf)
+        return (3/16*aux**5-5/8*aux**3+15/16*aux+1/2)
+    
+    #create time vector
+    t = np.sort(np.linspace(0,tf,nodes))
+
+    #create scaling factors
+    if mode=="linear":
+        amp = np.linspace(0,1,nodes)
+    elif mode=="exponential":
+        amp = np.logspace(-10,0,nodes)
+    elif mode=="dehnen":
+        amp = dehnen(t,tf)
+
+    amp = _amp*amp
+
+    #write to file
+    with open(filename,"w") as f:
+        f.write("#Time mass_scale radius_scale")
+        for i,t_ in enumerate(t):
+            new_line = str(t_) + " " + str(amp[i]) + " " + "1" + "\n"
+            f.write(new_line)
+
+    return None
+
 
