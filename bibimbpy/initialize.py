@@ -124,17 +124,20 @@ def generate_TimeDepPot(rmin,rmax,**pot_kwargs):
     The other required parameters is a file describing the time evolution of the perturbation and rmin, rmax used for the m=0 expantion.
 
     Input:
-    - scaling_file: The expected format of the file is the following:
+    - rmin: the radius of the innermost nonzero node in the radial grid (for both potential
+expansions); zero means automatic determination.
+    - rmax: same for the outermost node; zero values mean automatic determination.
+    - pot_kwargs: the parameters passed to AGAMA to generate the desired perturbation. Must include the "scale" parameter!
+        - scale: address to the scaling file. The expected format of this file is the following:
     #Time Mass_scale Radius_scale
     0 0 1
     0.1 0.5 1
     0.2 1 1
     NOTES: time must be order in increasing order and the separation between values is done with blank spaces.
 
-    - rmin: the radius of the innermost nonzero node in the radial grid (for both potential
-expansions); zero means automatic determination.
-    - rmax: same for the outermost node; zero values mean automatic determination.
-    - pot_kwargs: the parameters passed to AGAMA to generate the desired perturbation
+    Output:
+    - perturbation: agama.Potential, time dependant potential of the perturbation
+    - m0_static: agama.Potential, only the m=0 component (static, no time dependence)
     """
     #make the timedep part
     pot_pertuber = agama.Potential(**pot_kwargs)
