@@ -51,3 +51,7 @@ The result of _orbit.runBI_ is an array containing the value of the Distribution
 ## Attribution
 
 Feel free to use this software and, if you run into any issue, do not hesitate to contact me. 
+
+
+## Image source
+The image used for the logo is not mine. Credit goes to user _su-lin_ @[flickr](https://www.flickr.com/photos/su-lin/4429927455)
