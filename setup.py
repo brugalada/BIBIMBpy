@@ -21,7 +21,7 @@ with open(path.join(this_folder, 'README.md'), encoding='utf-8') as f:
 with open(path.join(this_folder, 'HISTORY.md'), encoding='utf-8') as f:
     history = f.read()
 
-# Get code version from __init__.py (see https://github.com/dfm/emcee/blob/master/setup.py)
+# Get code version from __init__.py 
 vre = re.compile("__version__ = \"(.*?)\"")
 m = open(path.join(this_folder, "bibimbpy", "__init__.py")).read()
 code_version = vre.findall(m)[0]

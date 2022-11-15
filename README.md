@@ -5,7 +5,7 @@ This package is a simple interface to simplify the act of running backward integ
 
 Backward Integrations are a simple way to generate high resolution renderings of phase-space at an arbitrary time, and for an arbitrary time-evolving potential. The main limitation of this method is that there is no self-gravity envolved so, in a way, are equivalent to test particle simulations. 
 
-The physical principle in which it is based is the following: "_The collisionless Boltzmann equation tells us that the DF remains constant along stellar trajectories. Thus, the value $f(w,t_2)$ of the DF at some phase-space point $w = (x, v)$ time $t_2$ is equal to $f(w_0,0)$ if $w$ originates from integrating $w_0$ from $t = 0$ to $t = t_2$._" (extract from Dehnen 2000)
+The physical principle in which it is based is the following: "_The collisionless Boltzmann equation tells us that the Distribution Function (DF) remains constant along stellar trajectories. Thus, the value f(w,t2) of the DF at some phase-space point w = (x, v) at time t2 is equal to f(w0,0) if w originates from integrating w0 from t = 0 to t = t2._" (extract from Dehnen 2000)
 
 ## Documentation
 
@@ -32,7 +32,7 @@ Make sure to run the latest versions, specially for AGAMA.
 
 ## Basic usage
 
-In the folder *TUTORIALS*, you will find examples on how to use the different functions provided.
+In the folder *TESTS*, you will find examples on how to use the different functions provided.
 
 Also, in the folder *DOCS* there is an schema that depicts the normal flow and intended usages. 
 
