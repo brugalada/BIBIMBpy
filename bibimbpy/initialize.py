@@ -37,10 +37,10 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
         final_vars["r"] = r
 
     if isinstance(phi,list) or isinstance(phi,tuple) or isinstance(phi,np.ndarray):
-        iter_vars["phi"] = phi
+        iter_vars["phi"] = np.deg2rad(phi)
         lenghts.append(len(phi))
     else:
-        final_vars["phi"] = phi
+        final_vars["phi"] = np.deg2rad(phi)
 
     if isinstance(z,list) or isinstance(z,tuple) or isinstance(z,np.ndarray):
         iter_vars["z"] = z
@@ -153,6 +153,15 @@ expansions); zero means automatic determination.
     return agama.Potential(pot_pertuber,pot_pertuber_m0),pot_pertuber_m0_static
 
 def generate_Pot(base_pot_dict,perturb_pot_dict,_rmin=0,_rmax=20):
+    """
+    Generate two Agama potentials, the fixed (static) pre-perturbation potential and the time dependent potential that contains the perturbation.
+
+    Inputs:
+    - base_pot_dict: dictionary passed to agama.Potential to generate the unperturbed, background potential
+    - perturb_pot_dict: dictionary passed to agama.Potential to generate the time dependent perturbation (MUST INCLUDE A "SCALE" ATTRIBUTE)
+    - _rmin [0]: the radius of the innermost nonzero node in the radial grid (for both potential expansions); zero means automatic determination.
+    - _rmax [0]: same for the outermost node; zero values mean automatic determination.
+    """
 
     #generate timedep potential
     perturb,m0_mode_stat = generate_TimeDepPot(_rmin,_rmax,**perturb_pot_dict)
@@ -160,6 +169,6 @@ def generate_Pot(base_pot_dict,perturb_pot_dict,_rmin=0,_rmax=20):
     #generate base potential
     pbase = agama.Potential(**base_pot_dict)
 
-    return agama.Potential(pbase,m0_mode_stat),perturb
+    return agama.Potential(pbase,m0_mode_stat),agama.Potential(pbase,perturb)
 
     

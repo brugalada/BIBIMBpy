@@ -150,7 +150,7 @@ def generate_scaling_file(tf,mode,nodes,filename,_amp=1):
 
     #write to file
     with open(filename,"w") as f:
-        f.write("#Time mass_scale radius_scale")
+        f.write("#Time mass_scale radius_scale\n")
         for i,t_ in enumerate(t):
             new_line = str(t_) + " " + str(amp[i]) + " " + "1" + "\n"
             f.write(new_line)
