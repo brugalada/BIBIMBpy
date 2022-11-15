@@ -1,6 +1,6 @@
 import numpy as np
 import agama
-from .utils import bar2inertial_frame
+from .utils import rotating2inertial
 
 def integrate_backwards(particle_ini,pot,number_of_cycles,dyn_time_base,pattern_speed,_trajsize = 2):
     """ 
@@ -43,7 +43,7 @@ def runBI(particle_ini,pot_timedep,df_gen_func,dyn_time_base,number_of_cycles,pa
     time = trajectories[0,0]
     orbits = trajectories[:,1]
     particle_fin_barframe = np.stack([o[-1] for o in orbits])
-    o_inertial = bar2inertial_frame(time[-1],particle_fin_barframe,pattern_speed)
+    o_inertial = rotating2inertial(time[-1],particle_fin_barframe,pattern_speed)
     
     #evaluate DF
     df_eval = df_gen_func(o_inertial)
