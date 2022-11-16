@@ -2,22 +2,22 @@ import numpy as np
 import agama
 from .utils import rotating2inertial
 
-def integrate_backwards(particle_ini,pot,number_of_cycles,dyn_time_base,pattern_speed,_trajsize = 2):
+def integrate_backwards(particle_ini,pot,t_start,total_time,pattern_speed,_trajsize = 2):
     """ 
     particle_ini: initial conditions Nx6
     pot: agama potential
-    number_of_cycles: how many dynamical times to integrate for
-    dyn_time_base: dynamical time of reference [s*kpc/km]
+    t_start: starting time of the integration
+    total_time: amount of time to integrate for (positive value for backward integration, negative value for forward)
     pattern_speed: integrate in a rotating reference frame of constant pattern speed [km/s/kpc]
     _trajsize: number of snapshots
     """
     
-    trajectories = agama.orbit(ic = particle_ini,potential = pot,timestart = dyn_time_base*number_of_cycles,
-                                time=-dyn_time_base*number_of_cycles,lyapunov=False,trajsize=_trajsize,Omega=pattern_speed)
+    trajectories = agama.orbit(ic = particle_ini,potential = pot,timestart = t_start,
+                                time=-total_time,lyapunov=False,trajsize=_trajsize,Omega=pattern_speed)
     
     return trajectories
 
-def runBI(particle_ini,pot_timedep,df_gen_func,dyn_time_base,number_of_cycles,pattern_speed,_Npoints = 2):
+def runBI(particle_ini,pot_timedep,df_gen_func,t_start,total_time,pattern_speed,_Npoints = 2):
     """
     Run a backwards integration run in a time dependent potential.
 
@@ -37,7 +37,7 @@ def runBI(particle_ini,pot_timedep,df_gen_func,dyn_time_base,number_of_cycles,pa
     """
     
     #integration
-    trajectories = integrate_backwards(particle_ini,pot_timedep,number_of_cycles,dyn_time_base,pattern_speed,_trajsize=_Npoints)
+    trajectories = integrate_backwards(particle_ini,pot_timedep,t_start,total_time,pattern_speed,_trajsize=_Npoints)
     
     #put particles in inertial frame
     time = trajectories[0,0]
