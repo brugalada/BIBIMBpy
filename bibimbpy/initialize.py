@@ -77,9 +77,19 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
         final_vars[key1] = var1.flatten()
         final_vars[key2] = var2.flatten()
         len_ = len(final_vars[key1])
+        axis = (final_vars[key1],final_vars[key2])
+    elif len(iter_vars.keys())==3:
+        key1,key2,key3 = list(iter_vars.keys())
+        aux1,aux2,aux3 = list(iter_vars.values())
+        var1,var2,var3 = np.meshgrid(aux1, aux2, aux3, indexing="ij")
+        final_vars[key1] = var1.flatten()
+        final_vars[key2] = var2.flatten()
+        final_vars[key3] = var3.flatten()
+        len_ = len(final_vars[key1])
+        axis = (final_vars[key1],final_vars[key2],final_vars[key3])
     else:
         #TO-DO: allow for more variable to iterate through
-        raise ValueError("Sorry! More than two variables is not implemented yet!")
+        raise ValueError("Sorry! More than three variables is not implemented yet!")
 
     #Generate initial conditions
     x0  = final_vars["r"]*np.cos(final_vars["phi"])*np.ones(len_)
@@ -89,7 +99,7 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     vy0 = (final_vars["vr"]*np.sin(final_vars["phi"])+final_vars["vphi"]*np.cos(final_vars["phi"]))*np.ones(len_)
     vz0 = final_vars["vz"]*np.ones(len_)
 
-    return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),final_vars[key1],final_vars[key2]
+    return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),axis
 
 
 def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,interpol="false"):
