@@ -70,26 +70,19 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     ##TO-DO check that all values are the same
 
     #Cross variables with a meshgrid (accounting for all the cases)
-    if len(iter_vars.keys())==2:
-        key1,key2 = list(iter_vars.keys())
-        aux1,aux2 = list(iter_vars.values())
-        var1,var2 = np.meshgrid(aux1, aux2, indexing="ij")
-        final_vars[key1] = var1.flatten()
-        final_vars[key2] = var2.flatten()
-        len_ = len(final_vars[key1])
-        axis = (final_vars[key1],final_vars[key2])
-    elif len(iter_vars.keys())==3:
-        key1,key2,key3 = list(iter_vars.keys())
-        aux1,aux2,aux3 = list(iter_vars.values())
-        var1,var2,var3 = np.meshgrid(aux1, aux2, aux3, indexing="ij")
-        final_vars[key1] = var1.flatten()
-        final_vars[key2] = var2.flatten()
-        final_vars[key3] = var3.flatten()
-        len_ = len(final_vars[key1])
-        axis = (final_vars[key1],final_vars[key2],final_vars[key3])
+    if len(iter_vars.keys())>1:
+        keylist = list(iter_vars.keys())
+        varlist = list(iter_vars.values())
+        var2dlist = np.meshgrid(*varlist, indexing="ij")
+        axis = []
+        for i,key in enumerate(keylist):
+            aux = var2dlist[i].flatten()
+            final_vars[key] = aux
+            axis.append(aux)
+        len_ = len(final_vars[key])
     else:
         #TO-DO: allow for more variable to iterate through
-        raise ValueError("Sorry! More than three variables is not implemented yet!")
+        raise ValueError("Please provide at least two iterable variables (list, tuple or numpy array)!")
 
     #Generate initial conditions
     x0  = final_vars["r"]*np.cos(final_vars["phi"])*np.ones(len_)
