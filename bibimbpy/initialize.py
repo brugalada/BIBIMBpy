@@ -81,7 +81,6 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
             axis.append(aux)
         len_ = len(final_vars[key])
     else:
-        #TO-DO: allow for more variable to iterate through
         raise ValueError("Please provide at least two iterable variables (list, tuple or numpy array)!")
 
     #Generate initial conditions
