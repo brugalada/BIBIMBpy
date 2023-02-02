@@ -1,6 +1,6 @@
 import numpy as np
-import agama
 from .utils import rotating2inertial
+from .__init__ import agama
 
 def integrate_backwards(particle_ini,pot,t_start,total_time,pattern_speed,_trajsize = 2):
     """ 

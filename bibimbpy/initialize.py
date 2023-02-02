@@ -1,7 +1,7 @@
 import numpy as np
 import os
-import agama
 from .utils import write_potential, invert_scaling_file
+from .__init__ import agama
 
 def set_initial_conditions(r,phi,z,vr,vphi,vz):
     """
@@ -119,7 +119,7 @@ def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,inte
     return folder_name+file_name+".ini"
 
 
-def generate_TimeDepPot(rmin,rmax,**pot_kwargs):
+def generate_TimeDepPot(_rmin,_rmax,**pot_kwargs):
     """
     Generates a potential of a growing perturbation. Starts as a m=0 mode (only mass) and evolves into the final perturbation.
     The perturbation is any arbitrary AGAMA potential and is initialised as one would with AGAMA.
@@ -148,8 +148,8 @@ expansions); zero means automatic determination.
     #make the static part
     pot_kwargs.pop("scale")
     pot_pertuber_static = agama.Potential(**pot_kwargs)
-    pot_pertuber_m0_static = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=rmin, rmax=rmax)
-    pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=rmin, rmax=rmax, 
+    pot_pertuber_m0_static = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=_rmin, rmax=_rmax)
+    pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=_rmin, rmax=_rmax, 
                                         scale=invert_scaling_file(scaling_file))
 
     return agama.Potential(pot_pertuber,pot_pertuber_m0),pot_pertuber_m0_static
