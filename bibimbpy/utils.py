@@ -44,7 +44,7 @@ def store_results(filename,x,y,h):
     np.save(filename+"vphi_edges",y)
     np.save(filename+"dfsum",h)
 
-def DFhistogram2d(x,y,df_eval,bins):
+def DFhistogram2d(x,y,df_eval,bins,_statistic="sum"):
     """
     Add up the DF values of the particles simulated. X,Y can be anything but should be the two variables that have been explored in the backward integration a t=tfin! That is, the initial conditions, NOT the result of the backwards integration.
 
@@ -60,7 +60,7 @@ def DFhistogram2d(x,y,df_eval,bins):
     - df_sum: Sum of distribution function in each bin.
     """
     
-    df_sum,xe,ye,_ = scipy.stats.binned_statistic_2d(x,y,df_eval,statistic="sum",bins=bins)
+    df_sum,xe,ye,_ = scipy.stats.binned_statistic_2d(x,y,df_eval,bins=bins,statistic=_statistic)
 
     return df_sum,xe,ye
 

@@ -1,13 +1,11 @@
 import numpy as np
 import os
-import agama
 from .utils import write_potential, invert_scaling_file
+from .__init__ import agama
 
 def set_initial_conditions(r,phi,z,vr,vphi,vz):
     """
     Generate an array of initial conditions ready to be feed to the orbit integrator.
-    
-    NOTES: FOR NOW, ONLY TWO VARIABLES ARE ITERABLE. So, 4 variables have to be numbers and the other two, arrays of arbitrary lenghts N1 and N2. The resulting array will have N1*N2 particles.
 
     Inputs:
     - r: Galactocentric radius
@@ -70,16 +68,18 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     ##TO-DO check that all values are the same
 
     #Cross variables with a meshgrid (accounting for all the cases)
-    if len(iter_vars.keys())==2:
-        key1,key2 = list(iter_vars.keys())
-        aux1,aux2 = list(iter_vars.values())
-        var1,var2 = np.meshgrid(aux1, aux2, indexing="ij")
-        final_vars[key1] = var1.flatten()
-        final_vars[key2] = var2.flatten()
-        len_ = len(final_vars[key1])
+    if len(iter_vars.keys())>1:
+        keylist = list(iter_vars.keys())
+        varlist = list(iter_vars.values())
+        var2dlist = np.meshgrid(*varlist, indexing="ij")
+        axis = []
+        for i,key in enumerate(keylist):
+            aux = var2dlist[i].flatten()
+            final_vars[key] = aux
+            axis.append(aux)
+        len_ = len(final_vars[key])
     else:
-        #TO-DO: allow for more variable to iterate through
-        raise ValueError("Sorry! More than two variables is not implemented yet!")
+        raise ValueError("Please provide at least two iterable variables (list, tuple or numpy array)!")
 
     #Generate initial conditions
     x0  = final_vars["r"]*np.cos(final_vars["phi"])*np.ones(len_)
@@ -89,7 +89,7 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     vy0 = (final_vars["vr"]*np.sin(final_vars["phi"])+final_vars["vphi"]*np.cos(final_vars["phi"]))*np.ones(len_)
     vz0 = final_vars["vz"]*np.ones(len_)
 
-    return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),final_vars[key1],final_vars[key2]
+    return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),axis
 
 
 def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,interpol="false"):
@@ -117,7 +117,7 @@ def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,inte
     return folder_name+file_name+".ini"
 
 
-def generate_TimeDepPot(rmin,rmax,**pot_kwargs):
+def generate_TimeDepPot(_rmin,_rmax,**pot_kwargs):
     """
     Generates a potential of a growing perturbation. Starts as a m=0 mode (only mass) and evolves into the final perturbation.
     The perturbation is any arbitrary AGAMA potential and is initialised as one would with AGAMA.
@@ -146,8 +146,8 @@ expansions); zero means automatic determination.
     #make the static part
     pot_kwargs.pop("scale")
     pot_pertuber_static = agama.Potential(**pot_kwargs)
-    pot_pertuber_m0_static = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=rmin, rmax=rmax)
-    pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=rmin, rmax=rmax, 
+    pot_pertuber_m0_static = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=_rmin, rmax=_rmax)
+    pot_pertuber_m0 = agama.Potential(type='CylSpline', potential=pot_pertuber_static, mmax=0, rmin=_rmin, rmax=_rmax, 
                                         scale=invert_scaling_file(scaling_file))
 
     return agama.Potential(pot_pertuber,pot_pertuber_m0),pot_pertuber_m0_static

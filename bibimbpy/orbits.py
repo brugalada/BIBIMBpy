@@ -1,23 +1,23 @@
 import numpy as np
-import agama
 from .utils import rotating2inertial
+from .__init__ import agama
 
-def integrate_backwards(particle_ini,pot,number_of_cycles,dyn_time_base,pattern_speed,_trajsize = 2):
+def integrate_backwards(particle_ini,pot,t_start,total_time,pattern_speed,_trajsize = 2):
     """ 
     particle_ini: initial conditions Nx6
     pot: agama potential
-    number_of_cycles: how many dynamical times to integrate for
-    dyn_time_base: dynamical time of reference [s*kpc/km]
+    t_start: starting time of the integration
+    total_time: amount of time to integrate for (positive value for backward integration, negative value for forward)
     pattern_speed: integrate in a rotating reference frame of constant pattern speed [km/s/kpc]
     _trajsize: number of snapshots
     """
     
-    trajectories = agama.orbit(ic = particle_ini,potential = pot,timestart = dyn_time_base*number_of_cycles,
-                                time=-dyn_time_base*number_of_cycles,lyapunov=False,trajsize=_trajsize,Omega=pattern_speed)
+    trajectories = agama.orbit(ic = particle_ini,potential = pot,timestart = t_start,
+                                time=-total_time,lyapunov=False,trajsize=_trajsize,Omega=pattern_speed)
     
     return trajectories
 
-def runBI(particle_ini,pot_timedep,df_gen_func,dyn_time_base,number_of_cycles,pattern_speed,_Npoints = 2):
+def runBI(particle_ini,pot_timedep,df_gen_func,t_start,total_time,pattern_speed,_Npoints = 2):
     """
     Run a backwards integration run in a time dependent potential.
 
@@ -25,8 +25,8 @@ def runBI(particle_ini,pot_timedep,df_gen_func,dyn_time_base,number_of_cycles,pa
     - particle_ini: Initial conditions, Nx6 array of positions and velocites at t=tfin.
     - pot_timedep: AGAMA potential instance use for the backwards integration
     - df_gen_func: Arbritrary function that, given a vector Nx6 of positions and velocities in an intertial frame, returns the value of the Distribution Function for each of the particles in pot_base at t<=0, before the perturbation.
-    - dyn_time_base: Dynamical timescale. It is meant to be used as the period of the pattern speed, i.e. 2pi/pattern_speed [in units of s*kpc/km]
-    - number_of_cycles: Number of dynamical timescales to integrate.
+    - t_start: time when the simulation starts
+    - total_time: integration time (positive for backwards, negative for foward)
     - pattern_speed: pattern speed of the rotating frame, positive for a prograre rotation [in units of km/s/kpc]
     -_Npoints: Number of snapshots. In case you want to see the whole orbit, you can increase the number of sample taken along the whole orbit.
 
@@ -34,10 +34,11 @@ def runBI(particle_ini,pot_timedep,df_gen_func,dyn_time_base,number_of_cycles,pa
     - df_eval: value of the Distribution Function for each particle in particle_ini. 
     - time: time stamps of the snapshots obtained.
     - orbits: position and velocities of all particles in the rotating frame across time. 
+    - orbits in the intertial frame
     """
     
     #integration
-    trajectories = integrate_backwards(particle_ini,pot_timedep,number_of_cycles,dyn_time_base,pattern_speed,_trajsize=_Npoints)
+    trajectories = integrate_backwards(particle_ini,pot_timedep,t_start,total_time,pattern_speed,_trajsize=_Npoints)
     
     #put particles in inertial frame
     time = trajectories[0,0]
@@ -48,4 +49,4 @@ def runBI(particle_ini,pot_timedep,df_gen_func,dyn_time_base,number_of_cycles,pa
     #evaluate DF
     df_eval = df_gen_func(o_inertial)
 
-    return df_eval,time,orbits
+    return df_eval,time,orbits,o_inertial

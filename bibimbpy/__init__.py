@@ -10,6 +10,7 @@ __version__ = "1.0"
 
 try:
     import agama
+    agama.setUnits(mass=1, length=1, velocity=1)
 except ImportError:
     raise ImportError('AGAMA does not seem to be installed.')
 
