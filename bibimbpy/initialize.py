@@ -6,8 +6,6 @@ from .__init__ import agama
 def set_initial_conditions(r,phi,z,vr,vphi,vz):
     """
     Generate an array of initial conditions ready to be feed to the orbit integrator.
-    
-    NOTES: FOR NOW, ONLY TWO VARIABLES ARE ITERABLE. So, 4 variables have to be numbers and the other two, arrays of arbitrary lenghts N1 and N2. The resulting array will have N1*N2 particles.
 
     Inputs:
     - r: Galactocentric radius
