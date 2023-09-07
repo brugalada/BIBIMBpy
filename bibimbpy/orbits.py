@@ -34,7 +34,6 @@ def runBI(particle_ini,pot_timedep,df_gen_func,t_start,total_time,pattern_speed,
     - df_eval: value of the Distribution Function for each particle in particle_ini. 
     - time: time stamps of the snapshots obtained.
     - orbits: position and velocities of all particles in the rotating frame across time. 
-    - orbits in the intertial frame
     """
     
     #integration
@@ -44,9 +43,9 @@ def runBI(particle_ini,pot_timedep,df_gen_func,t_start,total_time,pattern_speed,
     time = trajectories[0,0]
     orbits = trajectories[:,1]
     particle_fin_barframe = np.stack([o[-1] for o in orbits])
-    o_inertial = rotating2inertial(time[-1],particle_fin_barframe,pattern_speed)
+    o_inertial = rotating2inertial(time[-1],particle_fin_barframe,pattern_speed,_t0 = t_start)
     
     #evaluate DF
     df_eval = df_gen_func(o_inertial)
 
-    return df_eval,time,orbits,o_inertial
+    return df_eval,time,orbits

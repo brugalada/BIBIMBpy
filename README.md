@@ -47,6 +47,12 @@ Once all this inputs have been defined, use the functions in the submodule _init
 
 The result of _orbit.runBI_ is an array containing the value of the Distribution Function for each particle, at a time prior to the perturbation. It also returns the array of time and the orbits of each particle (in the rotating frame, use _utils.rotating2inertial_ to convert back to the intertial frame).
 
+## Conventions
+
+By default, stars with positive angular momentum will rotate counterclock-wise. In the same manner, a perturbation with a positive pattern speed will also rotate counterclock-wise. This means that, in the backward integration were time decreases, particles will _appear_ to rotate clock-wise, but just because time is moving backwards. 
+
+Also by default, the bar will always start with its long axis aligned with the x-axis (i.e. flat). This means that a particle that starts at positive azimuth is _in front_ of the bar, in the sense that the bar is moving towards it instantaneously. In other words, the Sun would have a negative $\phi_{bar}$ in this convention.
+
 
 ## Attribution
 

@@ -6,7 +6,7 @@ This is a simple interface with AGAMA intended to simplify the process of settin
 BIBIMBpy requires AGAMA, numpy and scipy and matplotlib.
 """
 
-__version__ = "1.0"
+__version__ = "1.1"
 
 try:
     import agama
