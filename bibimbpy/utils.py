@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcols
 import scipy.stats
 
-def inertial2rotating(t, o,om):
+def inertial2rotating(t1, o,om,_t0 = 0):
+    t = t1 - _t0
     return np.column_stack((
     o[:,0] * np.cos(om*t) + o[:,1] * np.sin(om*t),
     o[:,1] * np.cos(om*t) - o[:,0] * np.sin(om*t),
@@ -12,7 +13,8 @@ def inertial2rotating(t, o,om):
     o[:,4] * np.cos(om*t) - o[:,3] * np.sin(om*t),
     o[:,5] ))
 
-def rotating2inertial(t,o,om):
+def rotating2inertial(t1, o,om,_t0 = 0):
+    t = t1 - _t0
     return np.column_stack((
     o[:,0] * np.cos(-om*t) + o[:,1] * np.sin(-om*t),
     o[:,1] * np.cos(-om*t) - o[:,0] * np.sin(-om*t),
