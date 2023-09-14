@@ -42,7 +42,8 @@ def runBI(particle_ini,pot_timedep,df_gen_func,t_start,total_time,pattern_speed,
     #put particles in inertial frame
     time = trajectories[0,0]
     orbits = trajectories[:,1]
-    particle_fin_barframe = np.stack([o[-1] for o in orbits])
+        #isolate initial position (before perturbation) of the particles at the end of the simulation (time[-1])
+    particle_fin_barframe = np.stack([o[-1] for o in orbits]) 
     o_inertial = rotating2inertial(time[-1],particle_fin_barframe,pattern_speed,_t0 = t_start)
     
     #evaluate DF
