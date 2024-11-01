@@ -85,7 +85,7 @@ def extract_params(pot_params_dict):
 
 def invert_scaling_file(file):
     """
-    This function takes a file with the right format (see below) and inverts the second and third column. In other words, the time evolution of the scaling factors is reversed.
+    This function takes a file with the right format (see below) and inverts the second and third column. In other words, the time evolution of the scaling factors is reversed, so that if i.e. the perturbation was growing, now it decays instead. 
 
     The expected format of the file is the following:
     #Time Mass_scale Radius_scale
@@ -160,13 +160,5 @@ def generate_scaling_file(tf,mode,nodes,filename,_amp=1):
     return None
 
 
-def default_df_gen_func(points,pot_base,df):
-    #action-angle
-    af = agama.ActionFinder(pot_base)
-
-    #compute actions at t=0
-    actions = af(points)
-
-    return df(actions)
 
 

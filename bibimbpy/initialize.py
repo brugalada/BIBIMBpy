@@ -16,9 +16,8 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     - vz: Verticle velocity
 
     Output:
-    - particles: N1*N2x6 array of particles
-    - var1: array of all used values for the first iterative variable, useful for the final histogram (Galactocentric coordiantes)
-    - var2: array of all used values for the second iterative variable, useful for the final histogram (Galactocentric coordiantes)
+    - particles: array of particles
+    - axis: array of all used values for the each iterative variable, useful to create histograms
     """
     #check which variables are iterables
     iter_vars = {}
@@ -92,7 +91,7 @@ def set_initial_conditions(r,phi,z,vr,vphi,vz):
     return np.column_stack((x0,y0,z0,vx0,vy0,vz0)),axis
 
 
-def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,interpol="false"):
+def _generate_TimeDepPot_old(folder_name,file_name,generating_function,times,interpol="false"):
     """
     interpol = true or false
     """
@@ -119,25 +118,26 @@ def generate_TimeDepPot_old(folder_name,file_name,generating_function,times,inte
 
 def generate_TimeDepPot(_rmin,_rmax,**pot_kwargs):
     """
-    Generates a potential of a growing perturbation. Starts as a m=0 mode (only mass) and evolves into the final perturbation.
+    Generates a time dependant potential of a growing perturbation. 
+    Starts as a m=0 mode (only mass) and evolves into the final perturbation.
     The perturbation is any arbitrary AGAMA potential and is initialised as one would with AGAMA.
-    The other required parameters is a file describing the time evolution of the perturbation and rmin, rmax used for the m=0 expantion.
+    The other required parameters is a file describing the time evolution of the perturbation with time and rmin, rmax, which are used to obtain the m=0 expansion.
 
     Input:
     - rmin: the radius of the innermost nonzero node in the radial grid (for both potential
 expansions); zero means automatic determination.
     - rmax: same for the outermost node; zero values mean automatic determination.
     - pot_kwargs: the parameters passed to AGAMA to generate the desired perturbation. Must include the "scale" parameter!
-        - scale: address to the scaling file. The expected format of this file is the following:
+        - scale: referes to the time scaling of the mass of the perturber. The expected format of this file is the following:
     #Time Mass_scale Radius_scale
     0 0 1
     0.1 0.5 1
     0.2 1 1
-    NOTES: time must be order in increasing order and the separation between values is done with blank spaces.
+    NOTES: time must be ordered in increasing order and the separation between values is done with blank spaces.
 
     Output:
-    - perturbation: agama.Potential, time dependant potential of the perturbation
-    - m0_static: agama.Potential, only the m=0 component (static, no time dependence)
+    - perturbation: an agama.Potential object, time dependant potential of the perturbation
+    - m0_static: an agama.Potential object, corresponding only to the m=0 component (static, no time dependence)
     """
     #make the timedep part
     pot_pertuber = agama.Potential(**pot_kwargs)
@@ -157,10 +157,14 @@ def generate_Pot(base_pot_dict,perturb_pot_dict,_rmin=0,_rmax=20):
     Generate two Agama potentials, the fixed (static) pre-perturbation potential and the time dependent potential that contains the perturbation.
 
     Inputs:
-    - base_pot_dict: dictionary passed to agama.Potential to generate the unperturbed, background potential
-    - perturb_pot_dict: dictionary passed to agama.Potential to generate the time dependent perturbation (MUST INCLUDE A "SCALE" ATTRIBUTE)
-    - _rmin [0]: the radius of the innermost nonzero node in the radial grid (for both potential expansions); zero means automatic determination.
-    - _rmax [0]: same for the outermost node; zero values mean automatic determination.
+        - base_pot_dict: dictionary passed to agama.Potential to generate the unperturbed, background potential
+        - perturb_pot_dict: dictionary passed to agama.Potential to generate the time dependent perturbation (MUST INCLUDE A "SCALE" ATTRIBUTE WITH THE LOCATION OF THE FILE DESCRIBING THE GROWTH OF THE PERTURBATION WITH TIME)
+        - _rmin [0]: the radius of the innermost nonzero node in the radial grid (for both potential expansions); zero means automatic determination.
+        - _rmax [0]: same for the outermost node; zero values mean automatic determination.
+
+    Outputs:
+        - static potential: an agama.Potential object of the background, unperturbed potential (same total mass as perturbed)
+        - time evolving potential: an agama.Potential object of the perturbed potential
     """
 
     #generate timedep potential

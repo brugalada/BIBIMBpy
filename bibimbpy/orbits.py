@@ -8,8 +8,8 @@ def integrate_backwards(particle_ini,pot,t_start,total_time,pattern_speed,_trajs
     pot: agama potential
     t_start: starting time of the integration
     total_time: amount of time to integrate for (positive value for backward integration, negative value for forward)
-    pattern_speed: integrate in a rotating reference frame of constant pattern speed [km/s/kpc]
-    _trajsize: number of snapshots
+    pattern_speed: integrate in a rotating reference frame of that (constant) pattern speed
+    _trajsize: number of snapshots to generate
     """
     
     trajectories = agama.orbit(ic = particle_ini,potential = pot,timestart = t_start,
@@ -22,16 +22,16 @@ def runBI(particle_ini,pot_timedep,df_gen_func,t_start,total_time,pattern_speed,
     Run a backwards integration run in a time dependent potential.
 
     Inputs:
-    - particle_ini: Initial conditions, Nx6 array of positions and velocites at t=tfin.
-    - pot_timedep: AGAMA potential instance use for the backwards integration
+    - particle_ini: Initial conditions, Nx6 array of positions and velocites at the start of the simulation.
+    - pot_timedep: AGAMA potential instance used for the integration. In the case of Backwards Integration, it should correspond to a perturbed potential where the perturbation reverts to zero at a certain time in the past t_start-total_time.
     - df_gen_func: Arbritrary function that, given a vector Nx6 of positions and velocities in an intertial frame, returns the value of the Distribution Function for each of the particles in pot_base at t<=0, before the perturbation.
     - t_start: time when the simulation starts
     - total_time: integration time (positive for backwards, negative for foward)
-    - pattern_speed: pattern speed of the rotating frame, positive for a prograre rotation [in units of km/s/kpc]
-    -_Npoints: Number of snapshots. In case you want to see the whole orbit, you can increase the number of sample taken along the whole orbit.
+    - pattern_speed: pattern speed of the rotating frame, positive for a prograde rotation
+    -_Npoints: Number of snapshots. In case you want to see the whole orbit, you can increase the number of samples taken along the whole orbit.
 
     Outputs:
-    - df_eval: value of the Distribution Function for each particle in particle_ini. 
+    - df_eval: value of the Distribution Function for each particle in particle_ini, evaluated at the end of the simulation. 
     - time: time stamps of the snapshots obtained.
     - orbits: position and velocities of all particles in the rotating frame across time. 
     """
